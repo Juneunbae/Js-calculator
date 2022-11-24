@@ -47,11 +47,15 @@
         const $result = document.querySelector('#result')
         
         const onClickNumber = (number) => (event) => { // 함수가 함수를 리턴하는 형태 : 고차 함수(high order function), 키보드 값 쳤을 때 값 출력을 위한 event, event는 브라우저가 넣어주는 값
-            if (operator) {
-                numTwo += number;
-            } else {
+            if (!operator) {
                 numOne += number;
+                $result.value += event.target.textContent;
+                return;
             }
+            if (!numTwo) { 
+                $result.value = '';
+            }
+            numTwo += number;
             $result.value += event.target.textContent;
         };
         document.querySelector('#num-0').addEventListener('click', onClickNumber('0'));
@@ -77,9 +81,41 @@
         document.querySelector('#minus').addEventListener('click', onClickOperator('-'));
         document.querySelector('#divide').addEventListener('click', onClickOperator('/'));
         document.querySelector('#multiply').addEventListener('click', onClickOperator('*'));
+        document.querySelector('#calculate').addEventListener('click', () => {
+            if (numTwo) { // 만약 2번째 숫자가 있으면
+            switch (operator) {
+                case '+' :
+                    $result.value = parseInt(numOne) + parseInt(numTwo);
+                    break;
+                
+                case '-' :
+                    $result.value = parseInt(numOne) - parseInt(numTwo); 
+                    // numOne - numTwo 도 가능하다. 빼기, 곱하기, 나누기는 자동적으로 숫자열로 바꾸어준다.
+                    // 저는 헷갈려서 넣었습니다^_^
+                    break;
 
-        document.querySelector('#calculate').addEventListener('click',);
-        document.querySelector('#clear').addEventListener('click', );
+                case '*' :
+                    $result.value = parseInt(numOne) * parseInt(numTwo);
+                    break;
+                
+                case '/' :
+                    $result.value = parseInt(numOne) / parseInt(numTwo);
+                    break;
+
+                default :
+                    break;
+            }
+        } else { // 만약 2번째 숫자가 없으면
+            alert('숫자를 먼저 입력하세요.');
+            }
+        });
+        document.querySelector('#clear').addEventListener('click', () => {
+            numOne = '';
+            operator = '';
+            numTwo = '';
+            $operator.value = ''
+            $result.value = ''
+        });
     </script>
 </body>
 </html>
